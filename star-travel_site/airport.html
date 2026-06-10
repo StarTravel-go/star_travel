@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尊榮機場接送 | 24H 專業智能預約</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">尊榮接送 LUXURY</div>
+    <ul class="nav-links">
+	    <li><a href="charter.html">包車旅遊</a></li>
+        <li><a href="#features">服務特色</a></li>
+        <li><a href="#booking" class="btn-contact-nav">立即試算</a></li>
+    </ul>
+</nav>
+
+<header class="hero">
+    <div class="hero-content">
+        <h1>專業、安全、尊榮</h1>
+        <p>全天候 24H 專業機場接送，為您的重要旅程提供最優質的起點。</p>
+        <div class="hero-btns">
+            <a href="#booking" class="btn-primary">線上報價</a>
+            <a href="https://line.me" class="btn-secondary">LINE 諮詢</a>
+        </div>
+    </div>
+</header>
+
+<section id="features" class="service-intro">
+    <div class="container">
+        <div class="section-header">
+            <h2>為什麼選擇尊榮接送？</h2>
+            <p>我們深知旅途的勞累，因此提供最貼心的細節服務</p>
+        </div>
+
+        <div class="service-grid">
+            <div class="service-card">
+                <div class="card-icon">💎</div>
+                <h3>極致舒適體驗</h3>
+                <p>嚴選車況優良、內裝整潔的 5/9 座車款，讓您在往返機場的路上能全然放鬆。</p>
+            </div>
+            <div class="service-card">
+                <div class="card-icon">👨‍✈️</div>
+                <h3>專業職業駕駛</h3>
+                <p>所有司機均具備職業駕照，服務態度親切親禮，協助搬運行李並確保行車平穩。</p>
+            </div>
+            <div class="service-card">
+                <div class="card-icon">💳</div>
+                <h3>價格透明公開</h3>
+                <p>系統即時試算，過路費已全含，絕無現場隨意加價之情況，讓您預算好掌握。</p>
+            </div>
+            <div class="service-card">
+                <div class="card-icon">🔔</div>
+                <h3>即時行程提醒</h3>
+                <p>預約完成後提供司機資訊，出車前發送提醒訊息，並即時監控航班動態。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="booking" class="booking-section">
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>即時車資試算</h2>
+                <p>輸入行李與人數，系統將為您推薦合適車型</p>
+            </div>
+            
+            <form class="booking-form" id="mainForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>服務機場</label>
+                        <select id="airport" onchange="updateAreaOptions()">
+                            <option value="TPE">桃園機場 (TPE)</option>
+                            <option value="TSA">松山機場 (TSA)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>接送類型</label>
+                        <select id="serviceType">
+                            <option value="送機">送機 (往機場)</option>
+                            <option value="接機">接機 (機場出發)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>區域地點</label>
+                    <select id="area"></select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>乘車人數</label>
+                        <input type="number" id="passengerCount" min="1" max="8" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>安全座椅 (+$200)</label>
+                        <select id="babySeat">
+                            <option value="0">不需要</option>
+                            <option value="1">1 張</option>
+                            <option value="2">2 張</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>28吋大行李</label>
+                        <input type="number" id="luggage28" min="0" max="10" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>24吋中行李</label>
+                        <input type="number" id="luggage24" min="0" max="10" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>符合條件車型</label>
+                    <select id="carType"></select>
+                </div>
+
+                <div id="price-display" class="price-box">
+                    <small>預估單程車資</small>
+                    <span id="estimated-amount">$0</span>
+                    <small id="price-note">* 最終價格以客服確認為準</small>
+                </div>
+
+                <button type="button" onclick="sendToLine()" class="btn-submit" id="submitBtn">
+                    前往 LINE 領取正式報價
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+// 數據與邏輯同前，確保功能完整
+const pricingData = {
+   TPE: { 
+       "台北市/新北市": { comfort: 1100, suv: 1200, van: 1400 },
+       "桃園中壢市區": { comfort: 1100, suv: 1200, van: 1500 },
+       "新竹市區": { comfort: 1600, suv: 1700, van: 2000 },
+       "基隆市區": { comfort: 1700, suv: 1800, van: 2100 },
+       "礁溪宜蘭": { comfort: 2400, suv: 2500, van: 2900 },
+       "羅東蘇澳": { comfort: 2700, suv: 2800, van: 3200 },
+       "台中市區": { comfort: 2600, suv: 2700, van: 3000 },
+       "苗栗市區": { comfort: 2100, suv: 2200, van: 2600 },
+       "彰化市區": { comfort: 2800, suv: 2900, van: 3300 },
+       "雲林市區": { comfort: 3500, suv: 3600, van: 4000 },
+       "嘉義市區": { comfort: 4200, suv: 4300, van: 4700 },
+       "台南市區": { comfort: 4700, suv: 4800, van: 5600 },
+       "花蓮市區": { comfort: 6200, suv: 6400, van: 7000 }
+   },
+   TSA: { 
+       "台北市區": { comfort: 800, suv: 900, van: 1100 },
+       "北投/文山/板橋/新莊": { comfort: 850, suv: 950, van: 1200 },
+       "新店/土城/汐止": { comfort: 900, suv: 1000, van: 1300 },
+       "三峽/鶯歌/淡水": { comfort: 950, suv: 1000, van: 1300 },
+       "宜蘭礁溪": { comfort: 1800, suv: 1900, van: 2300 }
+   }
+};
+
+const carOptions = [
+    { value: 'comfort', text: '舒適5座 (2大或3中行李)' },
+    { value: 'suv', text: '休旅5座 (3大或4中行李)' },
+    { value: 'van', text: '舒適8/9座 (6大或7中行李)' }
+];
+
+function updateAreaOptions() {
+   const airport = document.getElementById('airport').value;
+   const areaSelect = document.getElementById('area');
+   areaSelect.innerHTML = "";
+   Object.keys(pricingData[airport]).forEach(area => {
+       let opt = document.createElement('option');
+       opt.value = area; opt.text = area;
+       areaSelect.appendChild(opt);
+   });
+   calculatePrice();
+}
+
+document.getElementById('mainForm').addEventListener('input', calculatePrice);
+
+function calculatePrice() {
+   const airport = document.getElementById('airport').value;
+   const area = document.getElementById('area').value;
+   const carSelect = document.getElementById('carType');
+   const type = document.getElementById('serviceType').value;
+   const pax = parseInt(document.getElementById('passengerCount').value) || 0;
+   const seat = parseInt(document.getElementById('babySeat').value) || 0;
+   const lug28 = parseInt(document.getElementById('luggage28').value) || 0;
+   const lug24 = parseInt(document.getElementById('luggage24').value) || 0;
+
+   const effectivePax = pax + (seat > 0 ? 1 : 0); 
+   const currentSelected = carSelect.value;
+   carSelect.innerHTML = ""; 
+
+   const checkLimit = (car) => {
+       if (car === 'comfort') return effectivePax <= 4 && (lug28+lug24) <= 2 && lug24 <= 3;
+       if (car === 'suv') return effectivePax <= 4 && (lug28+lug24) <= 3 && lug24 <= 4;
+       if (car === 'van') return effectivePax <= 7 && (lug28+lug24) <= 6 && lug24 <= 7;
+       return false;
+   };
+
+   let availableCount = 0;
+   carOptions.forEach(opt => {
+       if (checkLimit(opt.value)) {
+           let nOpt = document.createElement('option');
+           nOpt.value = opt.value; nOpt.text = opt.text;
+           carSelect.appendChild(nOpt);
+           availableCount++;
+       }
+   });
+
+   if ([...carSelect.options].some(o => o.value === currentSelected)) carSelect.value = currentSelected;
+
+   const car = carSelect.value;
+   const note = document.getElementById('price-note');
+   const btn = document.getElementById('submitBtn');
+
+   if (availableCount > 0 && car) {
+       let price = pricingData[airport][area][car];
+       if (type === "接機" && (area === "台北市/新北市" || area === "桃園中壢市區")) price += 100; 
+       price += (seat * 200);
+       document.getElementById('estimated-amount').innerText = `$${price}`;
+       note.innerText = "* 此金額包含司機費、過路費，無隱藏加價。";
+       btn.disabled = false;
+   } else {
+       document.getElementById('estimated-amount').innerText = "---";
+       note.innerHTML = "<span style='color:red;'>⚠️ 此行李/人數組合超出車輛上限，請洽客服安排。</span>";
+       btn.disabled = true;
+   }
+}
+
+function sendToLine() {
+   const price = document.getElementById('estimated-amount').innerText;
+   const airport = document.getElementById('airport').options[document.getElementById('airport').selectedIndex].text;
+   const car = document.getElementById('carType').options[document.getElementById('carType').selectedIndex].text;
+   const msg = `【預約機場接送】\n地點：${document.getElementById('area').value} ↔ ${airport}\n類型：${document.getElementById('serviceType').value}\n車型：${car}\n人數：${document.getElementById('passengerCount').value}人/座椅${document.getElementById('babySeat').value}張\n行李：28吋x${document.getElementById('luggage28').value}、24吋x${document.getElementById('luggage24').value}\n試算金額：${price}`;
+   window.location.href = `https://line.me/R/oaMessage/@your_id/?${encodeURIComponent(msg)}`;
+}
+updateAreaOptions();
+</script>
+</body>
+</html>
